@@ -57,20 +57,29 @@ def compararHistogramas(modelo, trozo, hist_h):
     histSize = 256
     b_hist, g_hist, r_hist = calcBRGHist(bgr_planes, hist_h)
 
-    best_corr = 0
-    index = 0
-    best_index = 0
+    valores = []
     # Comparar con los histogramas del modelo
     for [b_hist2, g_hist2, r_hist2] in modeloHist:
         b_comp = cv.compareHist(b_hist, b_hist2, cv.HISTCMP_CORREL)
         g_comp = cv.compareHist(g_hist, g_hist2, cv.HISTCMP_CORREL)
         r_comp = cv.compareHist(r_hist, r_hist2, cv.HISTCMP_CORREL)
         #print(b_comp + g_comp + r_comp)
-        if (b_comp + g_comp + r_comp) > best_corr:
-            best_corr = b_comp + g_comp + r_comp
-            best_index = index
+        valores.append(b_comp + g_comp + r_comp)
+    return valores
+
+def getIndex(valor, array):
+    index=0
+    for a in array:
+        if a == valor:
+            return index
         index = index + 1
-    return best_index
+    return -1
+
+def getString(array):
+    text = ""
+    for a in array:
+        text = text + str(round(a,4)) + " "
+    return text
 
 def hconcat_resize(img_list, interpolation = cv.INTER_CUBIC):
     # take minimum hights
@@ -85,7 +94,8 @@ def hconcat_resize(img_list, interpolation = cv.INTER_CUBIC):
     return cv.hconcat(im_list_resize)
 
 for key, frame in autoStream():
-    
+    valores = []
+
     if region.roi:
         [x1,y1,x2,y2] = region.roi
         if key == ord('c'):
@@ -93,23 +103,26 @@ for key, frame in autoStream():
             cv.imshow("trozo", trozo)
         if key == ord('x'):
             region.roi = []
-        if key == ord('m'):
+        if key == ord('m') and len(modelo) < 3:
             # Guardar histograma en el modelo
             modelo.append(frame[y1:y2+1, x1:x2+1])
             concatenar = hconcat_resize(modelo)
             cv.imshow("Modelo", concatenar)
             modeloHist.append(calcBRGHist(cv.split(frame[y1:y2+1, x1:x2+1]),y2 - y1))
-        if key == ord('n') and modeloHist != []:
+        if len(modelo) == 3:
             # Evaluar el roi con el modelo de histogramas
-            mejor = compararHistogramas(modeloHist, frame[y1:y2+1, x1:x2+1], y2 - y1)
-            cv.imshow("detected", modelo[mejor])
+            valores = compararHistogramas(modeloHist, frame[y1:y2+1, x1:x2+1], y2 - y1)
+
+            #Imprimir valores 
+            putText(frame, getString(valores))
+
+            mejorValor = max(valores)
+            cv.imshow("detected", modelo[getIndex(mejorValor, valores)])
         
         bgr_planes = cv.split(frame[y1:y2+1, x1:x2+1])
         dibujarHistograma(frame, bgr_planes, x1, x2, y1, y2)
-
         cv.rectangle(frame, (x1,y1), (x2,y2), color=(0,255,255), thickness=2)
-        putText(frame, f'{x2-x1+1}x{y2-y1+1}', orig=(x1,y1-8))
+        
 
     h,w,_ = frame.shape
-    putText(frame, f'{w}x{h}')
     cv.imshow('input',frame)
