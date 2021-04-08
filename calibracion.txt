@@ -1,0 +1,9 @@
+Subrayador = 10,5 cm
+Distancia de camara-subrayador = 17,5 cm
+Tamaño Subrayador en pixeles = 340 pixeles
+
+Valor f (distancia focal) = 
+FOV Horizontal =
+FOV Vertical =
+
+Tamaño de la imagen: 800 x 600 
