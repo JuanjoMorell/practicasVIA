@@ -1,0 +1,20 @@
+%------------------------------------------------
+Changes 2017-08-07: template_assignment 1.3.0
++ Created changelog.tx for changes to template
++ Merged all files to single main.tex
++ Commented all packages and configs
++ Added comment separators for formatting, packages, title, content
++ Added blindtext
++ Added biblatex
++ Added copyright (CC BY-SA 4.0)
++ Removed "assignment" and "page" from footer
++ Removed foreach
+%------------------------------------------------
+Changes 2017-08-08: template_assignment 1.3.1
++ Fixed lower page margin
++ Retroactively changed Version numbering
+%------------------------------------------------
+Changes 2017-08-08: template_assignment 1.3.1 (ECL)
++ Added dummy names and titles
++ Added BibTeX file for various publications needed for assignments
++ Removed coauthors

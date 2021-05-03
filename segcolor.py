@@ -45,6 +45,7 @@ def uvh(x):
 
 for key, frame in autoStream():
     img = readrgb(frame)
+    copia = frame.copy()
 
     if region.roi:
         [x1,y1,x2,y2] = region.roi
@@ -59,22 +60,6 @@ for key, frame in autoStream():
             concatenar = hconcat_resize(modelo)
             cv.imshow("Modelo", concatenar)
         if len(modelo) == 2:
-            '''
-            med = [np.mean(r,(0,1)) for r in modelo]
-            muestras = []
-            for color in med:
-                x = np.zeros([100,100,3],np.uint8)
-                x[:,:] = color
-                muestras.append(x)
-
-            d = [ np.sum(abs(img - m), axis=2) for m in med ]
-            c  = np.argmin(d, axis=0)
-            res = np.zeros(img.shape, np.uint8)
-            for k in range(len(modelo)):
-                res[c==k] = med[k]
-
-            cv.imshow("Segmentacion", res)
-            '''
             hist = [uvh(r) for r in modelo]
             uvr = np.floor_divide( cv.cvtColor(img,cv.COLOR_RGB2YUV)[:,:,[1,2]], 8)
 
@@ -98,8 +83,8 @@ for key, frame in autoStream():
 
 
         
-        cv.rectangle(frame, (x1,y1), (x2,y2), color=(0,255,255), thickness=2)
+        cv.rectangle(copia, (x1,y1), (x2,y2), color=(0,255,255), thickness=2)
         
     h,w,_ = frame.shape
-    cv.imshow('input',frame)
+    cv.imshow('input',copia)
 

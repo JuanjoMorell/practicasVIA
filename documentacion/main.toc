@@ -1,0 +1,32 @@
+\babel@toc {spanish}{}
+\contentsline {section}{\numberline {1}CALIBRACI\IeC {\'O}N}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Apartado A}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Apartado B}{4}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Apartado C}{4}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Apartado D}{5}{subsection.1.4}
+\contentsline {subsection}{\numberline {1.5}Apartado E}{6}{subsection.1.5}
+\contentsline {section}{\numberline {2}ACTIVIDAD}{7}{section.2}
+\contentsline {subsection}{\numberline {2.1}Detector de Movimiento}{7}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Grabaci\IeC {\'o}n de Video}{8}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Anulaci\IeC {\'o}n de Fondo}{8}{subsection.2.3}
+\contentsline {section}{\numberline {3}COLOR}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}Modelo de Histogramas}{10}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Comparaci\IeC {\'o}n de Histogramas}{11}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Segmentaci\IeC {\'o}n por reproyecci\IeC {\'o}n}{12}{subsection.3.3}
+\contentsline {section}{\numberline {4}FILTROS}{14}{section.4}
+\contentsline {section}{\numberline {5}SIFT}{16}{section.5}
+\contentsline {section}{\numberline {6}RECTIF}{18}{section.6}
+\contentsline {section}{\numberline {7}PANO}{19}{section.7}
+\contentsline {section}{\numberline {8}RA}{20}{section.8}
+\contentsline {section}{\numberline {9}DLIB}{21}{section.9}
+\contentsline {section}{\numberline {10}VROT}{22}{section.10}
+\contentsline {section}{\numberline {11}DELOGO}{23}{section.11}
+\contentsline {section}{\numberline {12}SILU}{24}{section.12}
+\contentsline {section}{\numberline {13}ANON}{25}{section.13}
+\contentsline {section}{\numberline {14}CR}{26}{section.14}
+\contentsline {section}{\numberline {15}SWAP}{27}{section.15}
+\contentsline {section}{\numberline {16}NFACE}{28}{section.16}
+\contentsline {section}{\numberline {17}DNI}{29}{section.17}
+\contentsline {section}{\numberline {18}SUDO}{30}{section.18}
+\contentsline {section}{\numberline {19}STC}{31}{section.19}
+\contentsline {section}{\numberline {20}PROBLEMA ORIGINAL}{32}{section.20}

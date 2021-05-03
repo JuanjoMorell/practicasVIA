@@ -94,6 +94,7 @@ def hconcat_resize(img_list, interpolation = cv.INTER_CUBIC):
     return cv.hconcat(im_list_resize)
 
 for key, frame in autoStream():
+    copia = frame.copy()
     valores = []
 
     if region.roi:
@@ -114,15 +115,15 @@ for key, frame in autoStream():
             valores = compararHistogramas(modeloHist, frame[y1:y2+1, x1:x2+1], y2 - y1)
 
             #Imprimir valores 
-            putText(frame, getString(valores))
+            putText(copia, getString(valores))
 
             mejorValor = max(valores)
             cv.imshow("detected", modelo[getIndex(mejorValor, valores)])
         
         bgr_planes = cv.split(frame[y1:y2+1, x1:x2+1])
-        dibujarHistograma(frame, bgr_planes, x1, x2, y1, y2)
-        cv.rectangle(frame, (x1,y1), (x2,y2), color=(0,255,255), thickness=2)
+        dibujarHistograma(copia, bgr_planes, x1, x2, y1, y2)
+        cv.rectangle(copia, (x1,y1), (x2,y2), color=(0,255,255), thickness=2)
         
 
     h,w,_ = frame.shape
-    cv.imshow('input',frame)
+    cv.imshow('input',copia)

@@ -1,0 +1,36 @@
+\begin{thebibliography}{1}
+
+\bibitem{FOV}
+Bill Claff.
+\newblock Field-of-view of lenses by focal length.
+\newblock \url{https://www.nikonians.org/reviews/fov-tables}, June 2013.
+
+\bibitem{histCalc}
+Open CV.
+\newblock Histogram calculation.
+\newblock {\em OpenCV}, 2020.
+\newblock
+  \url{https://docs.opencv.org/master/d8/dbc/tutorial_histogram_calculation.html}.
+
+\bibitem{histComp}
+Open CV.
+\newblock Histogram comparison.
+\newblock {\em OpenCV}, 2020.
+\newblock
+  \url{https://docs.opencv.org/3.4/d8/dc8/tutorial_histogram_comparison.html}.
+
+\bibitem{threshold}
+Open CV.
+\newblock Image thresholding.
+\newblock {\em OpenCV}, 2020.
+\newblock
+  \url{https://https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html}.
+
+\bibitem{Angulos}
+Manivannan Murugavel.
+\newblock Find the angle between three points from 2d using python.
+\newblock
+  \url{https://manivannan-ai.medium.com/find-the-angle-between-three-points-from-2d-using-python-348c513e2cd},
+  March 2019.
+
+\end{thebibliography}
