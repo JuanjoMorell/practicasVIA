@@ -8,6 +8,16 @@ from ipywidgets          import interactive
 
 from collections import deque
 from umucv.util import putText
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", required=True,
+	help="image")
+ap.add_argument("-v", "--view", required=True,
+	help="view")
+ap.add_argument("-r", "--real", required=True,
+	help="real")
+args = vars(ap.parse_args())
 
 def fig(w,h):
     plt.figure(figsize=(w,h))
@@ -94,48 +104,16 @@ def rot3(a):
 pi = np.pi
 degree = pi/180
 
-img = readrgb('image2.jpg')
+img = readrgb(args["image"])
 
-rec = cv.warpPerspective(
-    img,                                # imagen de entrada
-    desp((300,1000)) @ rot3(245*degree),  # homografía (matriz 3x3)
-    (800,1000))                          # tamaño de la imagen resultante
+view = np.loadtxt(args["view"], dtype=float)
 
-view = np.array([
-        [2535,352],
-        [3079,1260],
-        [2422,1650],
-        [1878,717]
-        ])
-view = np.loadtxt('view2.txt',dtype=float)
-
-#plt.imshow(img)
-#shcont(view)
-#plt.show()
-
-#plt.imshow(rec)
-#plt.show()
-
-real = np.array([
-    [ 200.,  500.],
-    [ 368.,  500.],
-    [ 368.,  624.],
-    [ 200.,  624.]
-    ])
-real = np.loadtxt('real2.txt',dtype=float)
-
-fig(4,5); shcont(real); plt.axis([0,800,1000,0]);
-#plt.show()
+real = np.loadtxt(args["real"], dtype=float)
 
 H,_ = cv.findHomography(view, real)
 rec = cv.warpPerspective(img,H,(800,1000))
 
-fig(6,8)
-plt.imshow(rec)
-#plt.show()
-
 points = deque(maxlen=2)
-
 frame = rec.copy()
 
 def fun(event, x, y, flags, param):

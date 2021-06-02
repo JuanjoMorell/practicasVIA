@@ -108,6 +108,8 @@ view = np.array([
         [507,562]
         ])
 
+np.savetxt("view.txt", view)
+
 
 #plt.imshow(img)
 #shcont(view)
@@ -122,6 +124,8 @@ real = np.array([
     [ 370.,  608.],
     [ 200.,  608.]
     ])
+
+np.savetxt("real.txt", real)
 
 fig(4,5); shcont(real); plt.axis([0,800,1000,0]);
 #plt.show()
