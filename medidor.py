@@ -44,6 +44,15 @@ for key, frame in autoStream():
         cv.line(frame, points[0],points[1],(0,0,255))
         c = np.mean(points, axis=0).astype(int)
         angulo = getAngle(points[0], centro, points[1])
+
+        f = 3.06144885e+03
+        vector1 = [(points[0][0] - (frame.shape[0]/2)), (points[0][1] - (frame.shape[1]/2)), f]
+        vector2 = [(points[1][0] - (frame.shape[0]/2)), (points[1][1] - (frame.shape[1]/2)), f]
+        centro = [(- (frame.shape[0]/2)), (- (frame.shape[1]/2)), f]
+
+
+        angulo = getAngle(vector1, centro, vector2)
+
         putText(frame,f'{angulo:.1f} grados',c)
 
     cv.imshow('webcam',frame)

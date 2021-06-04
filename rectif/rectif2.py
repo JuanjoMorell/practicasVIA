@@ -17,6 +17,8 @@ ap.add_argument("-v", "--view", required=True,
 	help="view")
 ap.add_argument("-r", "--real", required=True,
 	help="real")
+ap.add_argument("-m", "--mm", type=int, required=True, help="mm")
+ap.add_argument("-p", "--px", type=int, required=True, help="pixels")
 args = vars(ap.parse_args())
 
 def fig(w,h):
@@ -108,8 +110,12 @@ img = readrgb(args["image"])
 
 view = np.loadtxt(args["view"], dtype=float)
 
-real = np.loadtxt(args["real"], dtype=float)
+plt.imshow(img)
+shcont(view)
+plt.show()
 
+real = np.loadtxt(args["real"], dtype=float)
+print(real)
 H,_ = cv.findHomography(view, real)
 rec = cv.warpPerspective(img,H,(800,1000))
 
@@ -131,7 +137,7 @@ while True:
         c = np.mean(points, axis=0).astype(int)
         d = np.linalg.norm(np.array(points[1])-points[0])
         # pixels a cm
-        cm = d / 20
+        cm = d * args["mm"] / (args["px"] *10)
         putText(frame,f'{cm:.1f} cm',c)
 
     cv.imshow('medir', frame)

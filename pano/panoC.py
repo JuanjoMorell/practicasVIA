@@ -71,6 +71,10 @@ def match(query, model):
 pano = [readrgb(x) for x in sorted(glob.glob(args["images"] + '/*.jpg'))]
 
 ordenParejas = sorted([(match(p,q)[0],i,j) for i,p in enumerate(pano) for j,q in enumerate(pano) if i< j],reverse=True)
+print(ordenParejas)
+
+# Obtener imagen base (imagen con mas matches)
+
 
 # Obtener la relación con más matches y colocar la imagen en el centro
 ordenFotos = [(ordenParejas[0][1], ordenParejas[0][2])]

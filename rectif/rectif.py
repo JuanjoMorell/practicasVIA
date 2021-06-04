@@ -94,41 +94,37 @@ def rot3(a):
 pi = np.pi
 degree = pi/180
 
-img = readrgb('coins.jpg')
-
-rec = cv.warpPerspective(
-    img,                                # imagen de entrada
-    desp((300,1000)) @ rot3(245*degree),  # homografía (matriz 3x3)
-    (800,1000))                          # tamaño de la imagen resultante
+img = readrgb('gol-eder.png')
 
 view = np.array([
-        [325,461],
-        [468,260],
-        [628,310],
-        [507,562]
+        [117,106],
+        [320,118],
+        [254,140],
+        [40,125]
+        
         ])
 
-np.savetxt("view.txt", view)
+np.savetxt("view3.txt", view)
 
 
-#plt.imshow(img)
-#shcont(view)
-#plt.show()
+plt.imshow(img)
+shcont(view)
+plt.show()
 
 #plt.imshow(rec)
 #plt.show()
 
 real = np.array([
-    [ 200.,  500.],
-    [ 370.,  500.],
-    [ 370.,  608.],
-    [ 200.,  608.]
+    [ 100.,  100.],
+    [ 450.,  100.],
+    [ 450.,  320.],
+    [ 100.,  320.]
     ])
 
-np.savetxt("real.txt", real)
+np.savetxt("real3.txt", real)
 
 fig(4,5); shcont(real); plt.axis([0,800,1000,0]);
-#plt.show()
+plt.show()
 
 H,_ = cv.findHomography(view, real)
 rec = cv.warpPerspective(img,H,(800,1000))
@@ -157,7 +153,7 @@ while True:
         d = np.linalg.norm(np.array(points[1])-points[0])
         # pixels a cm
         cm = d / 20
-        putText(frame,f'{cm:.1f} cm',c)
+        putText(frame,f'{cm:.1f} m',c)
 
     cv.imshow('medir', frame)
     if cv.waitKey(10) == 27:
