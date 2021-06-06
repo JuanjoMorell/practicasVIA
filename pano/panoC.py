@@ -2,6 +2,7 @@ import numpy as np
 import cv2   as cv
 
 import matplotlib.pyplot as plt
+from numpy.core.fromnumeric import shape
 import numpy.linalg      as la
 
 from ipywidgets          import interactive
@@ -71,13 +72,33 @@ def match(query, model):
 pano = [readrgb(x) for x in sorted(glob.glob(args["images"] + '/*.jpg'))]
 
 ordenParejas = sorted([(match(p,q)[0],i,j) for i,p in enumerate(pano) for j,q in enumerate(pano) if i< j],reverse=True)
-print(ordenParejas)
 
 # Obtener imagen base (imagen con mas matches)
+matches = [0] * len(pano)
+for (m, im1, im2) in ordenParejas:
+    matches[im1] += m
+    matches[im2] += m
 
+mostMatch = 0
+imgBase = 0
+contador = 0
+for m in matches:
+    if m > mostMatch:
+        mostMatch = m
+        imgBase = contador
+    contador += 1
+
+print("Imagen base: " + str(imgBase) + ", con un total de " + str(mostMatch) + " matches")
+
+# Buscar pareja con base que mas matches tenga
+pareja = (0,0,0)
+for (m, im1, im2) in ordenParejas:
+    if im1 == imgBase or im2 == imgBase:
+        pareja = (m, im1, im2)
+        break
 
 # Obtener la relación con más matches y colocar la imagen en el centro
-ordenFotos = [(ordenParejas[0][1], ordenParejas[0][2])]
+ordenFotos = [(pareja[1], pareja[2])]
 
 izq = 0
 der = 0
@@ -89,16 +110,9 @@ else:
     der = ordenFotos[0][1]
 next = (0,0)
 
-h,w,_ = pano[ordenFotos[0][0]].shape
-mw, mh = 100*len(pano),100
-T = desp((100,float(100)))
-sz = (w+2*mw,h+2*mh)
-base = cv.warpPerspective(pano[ordenFotos[0][0]], T, sz)
-baseImg = ordenFotos[0][0]
-
-ordenCopia = ordenParejas[1:]
+ordenParejas.remove(pareja)
 while len(ordenFotos) != (len(pano) - 1):
-    for (valor, i1, i2) in ordenCopia:
+    for (valor, i1, i2) in ordenParejas:
         if i1 == izq or i2 == izq or i1 == der or i1 == izq: 
             next = (i1,i2)
             if izq > i1:
@@ -109,50 +123,104 @@ while len(ordenFotos) != (len(pano) - 1):
                 der = i1
             elif der < i2:
                 der = i2
-            ordenCopia.remove((valor,i1,i2))
+            ordenParejas.remove((valor,i1,i2))
             ordenFotos.append(next)
             break
     
 print(ordenFotos)
 
+h,w,_ = pano[ordenFotos[0][0]].shape
+mw, mh = 500,500
+T = desp((0,float(0)))
+sz = (w+2*mw,h+2*mh)
+base = cv.warpPerspective(pano[ordenFotos[0][0]], T, sz)
+baseImg = ordenFotos[0][0]
+
 # Tratar el resto de las imagenes obteniendo mejor matches
-
 _,H1 = match(pano[ordenFotos[0][0]],pano[ordenFotos[0][1]])
-cv.warpPerspective(pano[ordenFotos[0][1]],T@H1,sz, base, 0, cv.BORDER_TRANSPARENT)
-fig(10,6)
-plt.imshow(base)
-plt.show()
 
-orden = T@H1
+orden = H1
 
+despX = 0
+despY = 0
+tamX = 0
+tamY = 0
 anterior = (0,0)
 for (x,y) in ordenFotos[1:]:
     if x == baseImg:
         _,H = match(pano[x], pano[y])
         orden = T@H
+        if despX > orden.astype(int)[0][2]:
+            despX = orden.astype(int)[0][2]
+        if despY > orden.astype(int)[1][2]:
+            despY = orden.astype(int)[1][2]
+        tamX += abs(orden.astype(int)[0][2])
+        tamY += abs(orden.astype(int)[1][2])
+    elif y == baseImg:
+        _,H = match(pano[y], pano[x])
+        orden = T@H
+        if despX > orden.astype(int)[0][2]:
+            despX = orden.astype(int)[0][2]
+        if despY > orden.astype(int)[1][2]:
+            despY = orden.astype(int)[1][2]
+        tamX += abs(orden.astype(int)[0][2])
+        tamY += abs(orden.astype(int)[1][2])
+    elif anterior[0] == y:
+        _,H = match(pano[y], pano[x])
+        orden = orden@H
+        if despX > orden.astype(int)[0][2]:
+            despX = orden.astype(int)[0][2]
+        if despY > orden.astype(int)[1][2]:
+            despY = orden.astype(int)[1][2]
+        tamX += abs(orden.astype(int)[0][2])
+        tamY += abs(orden.astype(int)[1][2])
+    else:
+        _,H = match(pano[x], pano[y])
+        orden = H@orden
+        if despX > orden.astype(int)[0][2]:
+            despX = orden.astype(int)[0][2]
+        if despY > orden.astype(int)[1][2]:
+            despY = orden.astype(int)[1][2]
+        tamX += abs(orden.astype(int)[0][2])
+        tamY += abs(orden.astype(int)[1][2])
+    anterior = (x,y)
+
+tamX = abs(tamX - despX)
+tamY = abs(tamY - despY)
+print("Desplazamiento de la imagen base: " + str(abs(despX)) + ", " + str(abs(despY)))
+print("Tamaño total imagen: " + str(abs(tamX)) + ", " + str(abs(tamY)))
+
+h,w,_ = pano[ordenFotos[0][0]].shape
+T = desp((abs(despX),float(abs(despY))))
+sz = (tamX+pano[imgBase].shape[0], tamY+pano[imgBase].shape[1])
+base = cv.warpPerspective(pano[ordenFotos[0][0]], T, sz)
+baseImg = ordenFotos[0][0]
+
+
+cv.warpPerspective(pano[ordenFotos[0][1]],T@H1,sz, base, 0, cv.BORDER_TRANSPARENT)
+
+orden = T@H1
+
+for (x,y) in ordenFotos[1:]:
+    if x == baseImg:
+        _,H = match(pano[x], pano[y])
+        orden = T@H
+        
         cv.warpPerspective(pano[y],orden,sz, base, 0, cv.BORDER_TRANSPARENT)
-        fig(10,6)
-        plt.imshow(base)
-        plt.show()
     elif y == baseImg:
         _,H = match(pano[y], pano[x])
         orden = T@H
         cv.warpPerspective(pano[x],orden,sz, base, 0, cv.BORDER_TRANSPARENT)
-        fig(10,6)
-        plt.imshow(base)
-        plt.show()
     elif anterior[0] == y:
         _,H = match(pano[y], pano[x])
         orden = orden@H
         cv.warpPerspective(pano[x],orden,sz, base, 0, cv.BORDER_TRANSPARENT)
-        fig(10,6)
-        plt.imshow(base)
-        plt.show()
     else:
         _,H = match(pano[x], pano[y])
         orden = H@orden
         cv.warpPerspective(pano[y],orden,sz, base, 0, cv.BORDER_TRANSPARENT)
-        fig(10,6)
-        plt.imshow(base)
-        plt.show()
     anterior = (x,y)
+
+fig(10,6)
+plt.imshow(base)
+plt.show()
